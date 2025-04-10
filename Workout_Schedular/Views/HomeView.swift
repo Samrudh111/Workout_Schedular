@@ -16,7 +16,7 @@ struct HomeView: View{
                     .opacity(0.7)
                     .ignoresSafeArea()
                 VStack{
-                    Text("Welcome to Workout Schedular")
+                    Text("Hey there! Welcome to Workout Schedular")
                         .foregroundStyle(.red)
                         .font(.headline)
                         .fontWeight(.heavy)
