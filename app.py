@@ -5,7 +5,9 @@ from openai import OpenAI
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+if os.getenv("RENDER") is None:
+    load_dotenv()
+    
 app = Flask(__name__)
 CORS(app)  # Allows calls from your SwiftUI frontend
 
