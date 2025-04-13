@@ -1,5 +1,7 @@
 flask
 flask-cors
+flask-sqlalchemy
+werkzeug
 openai
 gunicorn
 python-dotenv
