@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from models import db, User
 import openai
 from openai import OpenAI
 import os
@@ -12,7 +13,12 @@ app = Flask(__name__)
 CORS(app)  # Allows calls from your SwiftUI frontend
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-#openai.api_key = os.getenv("OPENAI_API_KEY")  # Set your key via env var
+
+# Configure DB
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db.init_app(app)
 
 @app.route("/generate-plan", methods=["POST"])
 def generate_plan():
@@ -53,6 +59,35 @@ def generate_plan():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+# Route: Sign Up
+@app.route("/signup", methods=["POST"])
+def signup():
+    data = request.get_json()
+    email = data.get("email")
+    password = data.get("password")
+
+    if not email or not password:
+        return jsonify({"error": "Missing email or password"}), 400
+
+    # Check if user exists
+    if User.query.filter_by(email=email).first():
+        return jsonify({"error": "User already exists"}), 409
+
+    # Create and save new user
+    user = User(email=email)
+    user.set_password(password)
+    db.session.add(user)
+    db.session.commit()
+
+    return jsonify({"message": "User created"}), 201
+
+# Run once to initialize the DB
+@app.before_first_request
+def create_tables():
+    db.create_all()
+
 
 if __name__ == "__main__":
     app.run(debug=True)
