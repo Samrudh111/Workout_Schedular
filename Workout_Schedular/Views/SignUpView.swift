@@ -64,7 +64,7 @@ struct SignUpView: View {
     }
 
     func signUpUser() {
-        guard let url = URL(string: "https://your-api-url.onrender.com/signup") else { return }
+        guard let url = URL(string: "https://workout-schedular.onrender.com/signup") else { return }
 
         let body: [String: String] = [
             "email": email,
