@@ -25,8 +25,8 @@ app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
 db.init_app(app)
 
 # Run once to initialize the DB
-#with app.app_context():
-#    db.create_all()
+with app.app_context():
+    db.create_all()
 
 @app.route("/generate-plan", methods=["POST"])
 def generate_plan():
