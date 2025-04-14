@@ -15,7 +15,7 @@ CORS(app)  # Allows calls from your SwiftUI frontend
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 # Configure DB
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://user:password@host:port/dbname'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://workout_schedular_db_user:8QcxamQr9BvuLF7Vo0djxbflKNV4O5wL@dpg-cvu70qvgi27c73af1l10-a/workout_schedular_db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
