@@ -25,12 +25,8 @@ app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
 db.init_app(app)
 
 # Run once to initialize the DB
-with app.app_context():
-    db.create_all()
-
-@app.before_first_request
-def create_tables():
-    db.create_all()
+#with app.app_context():
+#    db.create_all()
 
 @app.route("/generate-plan", methods=["POST"])
 def generate_plan():
@@ -96,4 +92,6 @@ def signup():
     return jsonify({"message": "User created"}), 201
 
 if __name__ == "__main__":
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)
