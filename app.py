@@ -28,6 +28,10 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
+@app.before_first_request
+def create_tables():
+    db.create_all()
+
 @app.route("/generate-plan", methods=["POST"])
 def generate_plan():
     # return jsonify([
