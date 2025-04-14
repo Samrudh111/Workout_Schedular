@@ -20,7 +20,6 @@ struct SplashScreenView: View {
                             .ignoresSafeArea(.all)
                         Image("Arnold_Conquer")
                             .resizable()
-                            //.scaledToFill()
                             .frame(width: geometry.size.width)
                             .scaleEffect(y: scaleValue, anchor: .center)
                             .clipped()
@@ -35,8 +34,13 @@ struct SplashScreenView: View {
                 .transition(.opacity)
             }
             else{
-                LoginView()
-                    .transition(.opacity)
+                if UserManager.shared.isUserLoggedIn() {
+                    HomeView()
+                        .transition(.opacity)
+                } else {
+                    LoginView()
+                        .transition(.opacity)
+                }
             }
         }
         .animation(.easeInOut(duration: 0.8), value: showSplash)

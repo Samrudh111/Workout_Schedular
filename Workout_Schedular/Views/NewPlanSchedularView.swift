@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct BMICalculatorView: View {
+struct NewPlanSchedularView: View {
     @State private var height: String = ""
     @State private var weight: String = ""
     @State private var age: String = ""
@@ -133,7 +133,7 @@ struct BMICalculatorView: View {
     func submitForWorkoutPlan() {
         guard let bmiValue = bmiValue else { return }
 
-        let url = URL(string: "http://127.0.0.1:5000/generate-plan")!
+        let url = URL(string: "https://workout-schedular.onrender.com/generate-plan")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -167,5 +167,5 @@ struct WorkoutDay: Identifiable, Decodable {
 
 
 #Preview {
-    BMICalculatorView()
+    NewPlanSchedularView()
 }

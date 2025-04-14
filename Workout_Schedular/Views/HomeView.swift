@@ -35,7 +35,7 @@ struct HomeView: View{
                     .padding(.horizontal, 50)
                     .padding(.vertical, 40)
                     
-                    NavigationLink(destination: BMICalculatorView(), isActive: $navigateToSchedularView){
+                    NavigationLink(destination: NewPlanSchedularView(), isActive: $navigateToSchedularView){
                         EmptyView()
                     }
                 }

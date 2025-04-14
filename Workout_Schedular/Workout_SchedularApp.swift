@@ -11,7 +11,7 @@ import SwiftUI
 struct Workout_SchedularApp: App {
     var body: some Scene {
         WindowGroup {
-            HomeView()
+            SplashScreenView()
         }
     }
 }
