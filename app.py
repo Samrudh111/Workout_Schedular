@@ -92,6 +92,18 @@ def signup():
 
     return jsonify({"message": "User created"}), 201
 
+@app.route("/login", methods=["POST"])
+def login():
+    data = request.get_json()
+    email = data.get("email")
+    password = data.get("password")
+
+    user = User.query.filter_by(email=email).first()
+    if user and user.check_password(password):
+        return jsonify({"message": "Login successful"}), 200
+    else:
+        return jsonify({"error": "Invalid credentials"}), 401
+
 if __name__ == "__main__":
     with app.app_context():
         db.drop_all()
