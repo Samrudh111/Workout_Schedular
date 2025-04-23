@@ -15,13 +15,18 @@ CORS(app)  # Allows calls from your SwiftUI frontend
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 # Configure DB
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://user:password@host:port/dbname'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://workout_schedular_db_user:8QcxamQr9BvuLF7Vo0djxbflKNV4O5wL@dpg-cvu70qvgi27c73af1l10-a/workout_schedular_db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+    "connect_args": {"sslmode": "require"}
+}
 
 db.init_app(app)
 
 # Run once to initialize the DB
 with app.app_context():
+    db.drop_all()
     db.create_all()
 
 @app.route("/generate-plan", methods=["POST"])
@@ -87,5 +92,20 @@ def signup():
 
     return jsonify({"message": "User created"}), 201
 
+@app.route("/login", methods=["POST"])
+def login():
+    data = request.get_json()
+    email = data.get("email")
+    password = data.get("password")
+
+    user = User.query.filter_by(email=email).first()
+    if user and user.check_password(password):
+        return jsonify({"message": "Login successful"}), 200
+    else:
+        return jsonify({"error": "Invalid credentials"}), 401
+
 if __name__ == "__main__":
+    with app.app_context():
+        db.drop_all()
+        db.create_all()
     app.run(debug=True)
