@@ -36,7 +36,11 @@ struct SignUpView: View {
                         .padding(.horizontal)
 
                     Button("Create Account") {
-                        signUpUser()
+                        if isValidInput() {
+                            signUpUser()
+                        } else {
+                            errorMessage = "Use a valid @example.com email and password of at least 5 characters"
+                        }
                     }
                     .frame(maxWidth: .infinity)
                     .padding()
@@ -63,6 +67,12 @@ struct SignUpView: View {
         }
     }
 
+    func isValidInput() -> Bool {
+        return email.contains("@") &&
+               email.lowercased().hasSuffix(".com") &&
+               password.count >= 5
+    }
+    
     func signUpUser() {
         guard let url = URL(string: "https://workout-schedular.onrender.com/signup") else { return }
 
