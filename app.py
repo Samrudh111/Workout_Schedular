@@ -26,20 +26,11 @@ db.init_app(app)
 
 # Run once to initialize the DB
 with app.app_context():
-    db.drop_all()
+    #db.drop_all()
     db.create_all()
 
 @app.route("/generate-plan", methods=["POST"])
 def generate_plan():
-    # return jsonify([
-    #     {"day": "Monday", "workout": "Chest + HIIT"},
-    #     {"day": "Tuesday", "workout": "Back + Cardio"},
-    #     {"day": "Wednesday", "workout": "Legs"},
-    #     {"day": "Thursday", "workout": "Shoulders + Abs"},
-    #     {"day": "Friday", "workout": "Arms + Core"},
-    #     {"day": "Saturday", "workout": "Full Body Stretch"},
-    #     {"day": "Sunday", "workout": "Rest"}
-    # ])
     data = request.json
     bmi = data.get("bmi")
     goal = data.get("goal")
@@ -106,6 +97,6 @@ def login():
 
 if __name__ == "__main__":
     with app.app_context():
-        db.drop_all()
+        #db.drop_all()
         db.create_all()
     app.run(debug=True)
