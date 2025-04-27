@@ -8,70 +8,94 @@
 import SwiftUI
 
 struct LoginView: View{
+    @EnvironmentObject var appState: AppState
     @State private var email = ""
     @State private var password = ""
     @State private var showLoginError = false
     @State private var loginErrorMessage = ""
-    @State private var navigateToHome = false
-
-    var body: some View{
-        NavigationStack{
-            ZStack{
-                BackgroundView()
-                VStack{
-                    Text("Login")
-                        .font(.largeTitle)
-                        .bold()
-                        .foregroundStyle(.black)
-                        .padding(.bottom, 40)
-                    
-                    VStack(spacing: 20){
-                        TextField("email", text: $email)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .padding()
-                        SecureField("password", text: $password)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .padding(.horizontal)
+    @State private var isPasswordVisible = false
+    
+    var body: some View {
+        NavigationStack {
+            ZStack {
+                if appState.isLoggedIn {
+                    HomeView()
+                } else {
+                    BackgroundView()
+                    VStack{
+                        Text("Login")
+                            .font(.largeTitle)
+                            .bold()
+                            .foregroundStyle(.black)
+                            .padding(.bottom, 40)
                         
-                        Button("Login"){
-                            if isValidInput(){
-                                loginUser()
-                            } else {
-                                loginErrorMessage = "Use a valid @example.com email and password of at least 5 characters"
-                                showLoginError = true
+                        VStack(spacing: 20){
+                            TextField("email", text: $email)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .padding()
+                            ZStack{
+                                if !isPasswordVisible{
+                                    SecureField("password", text: $password)
+                                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                                        .padding(.horizontal)
+                                } else {
+                                    TextField("password", text: $password)
+                                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                                        .padding(.horizontal)
+                                }
+                                HStack{
+                                    Spacer()
+                                    Button(action: {
+                                        isPasswordVisible.toggle()
+                                    }) {
+                                        Image(systemName: isPasswordVisible ? "eye.fill" : "eye.slash.fill")
+                                            .padding(.horizontal, 6)
+                                            .padding(.vertical, 5.5)
+                                            .foregroundStyle(Color.gray)
+                                    }
+                                    .background(Color.white)
+                                    .padding(.horizontal, 18)
+                                }
                             }
+                            
+                            Button("Login"){
+                                if isValidInput(){
+                                    loginUser()
+                                } else {
+                                    loginErrorMessage = "Use a valid @example.com email and password of at least 5 characters"
+                                    showLoginError = true
+                                }
+                            }
+                            .alert(isPresented: $showLoginError) {Alert(title: Text("Login Failed"), message: Text(loginErrorMessage), dismissButton: .default(Text("OK")))
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                            .padding(.horizontal, 50)
+                            
+                            NavigationLink(destination: SignUpView()){
+                                Text("New User? Create an account")
+                                    .font(.footnote)
+                                    .foregroundStyle(Color.blue)
+                                    .underline()
+                            }
+                            .padding()
                         }
-                        .alert(isPresented: $showLoginError) {Alert(title: Text("Login Failed"), message: Text(loginErrorMessage), dismissButton: .default(Text("OK")))
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(8)
-                        .padding(.horizontal, 50)
-                        
-                        NavigationLink(destination: SignUpView()){
-                            Text("New User? Create an account")
-                                .font(.footnote)
-                                .foregroundStyle(Color.blue)
-                                .underline()
-                        }
-                        .padding()
-                    }
-                    .background(Color.white.opacity(0.5))
-                    .cornerRadius(10)
-                    .padding(.horizontal, 40)
-                    .shadow(radius: 5)
-                    
-                    NavigationLink(destination: HomeView(), isActive: $navigateToHome) {
-                        EmptyView()
-                    }.alert(isPresented: $showLoginError){
-                        Alert(title: Text("Invalid Login"), message: Text("Invalid email or password, Try again"), dismissButton: .default(Text("OK")))
+                        .background(Color.white.opacity(0.5))
+                        .cornerRadius(10)
+                        .padding(.horizontal, 40)
+                        .shadow(radius: 5)
                     }
                 }
             }
+            .onAppear{
+                if appState.userEmail != ""{
+                    email = appState.userEmail
+                }
+            }
         }
-        
     }
     
     func loginUser() {
@@ -86,9 +110,11 @@ struct LoginView: View{
         URLSession.shared.dataTask(with: request) { data, response, _ in
             DispatchQueue.main.async {
                 if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
-                    navigateToHome = true
+                    appState.isLoggedIn = true
+                    appState.userEmail = email
+                    appState.userPassword = password
                 } else {
-                    loginErrorMessage = "Invalid email or password"
+                    loginErrorMessage = "Invalid email or password. Try again."
                     showLoginError = true
                 }
             }
@@ -132,4 +158,5 @@ struct BackgroundView: View {
 
 #Preview {
     LoginView()
+        .environmentObject(AppState())
 }

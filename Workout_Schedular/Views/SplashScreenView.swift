@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SplashScreenView: View {
+    @EnvironmentObject var appState: AppState
     @State var scaleValue: CGFloat = 0.8
     @State var showSplash = true
     @State var animate = false
@@ -34,10 +35,10 @@ struct SplashScreenView: View {
                 .transition(.opacity)
             }
             else{
-                if UserManager.shared.isUserLoggedIn() {
+                if appState.isLoggedIn{
                     HomeView()
                         .transition(.opacity)
-                } else {
+                } else{
                     LoginView()
                         .transition(.opacity)
                 }

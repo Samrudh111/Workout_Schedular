@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct HomeView: View{
+    @EnvironmentObject var appState: AppState
     @State private var navigateToSchedularView: Bool = false
     var body: some View{
         NavigationStack{
@@ -35,12 +36,17 @@ struct HomeView: View{
                     .padding(.horizontal, 50)
                     .padding(.vertical, 40)
                     
+                    Spacer()
+                    Button("Logout"){
+                        appState.isLoggedIn = false
+                        appState.userPassword = ""
+                    }
                     NavigationLink(destination: NewPlanSchedularView(), isActive: $navigateToSchedularView){
                         EmptyView()
                     }
                 }
             }
-        }
+        }.navigationBarBackButtonHidden(true)
     }
 }
 

@@ -8,61 +8,82 @@
 import SwiftUI
 
 struct SignUpView: View {
+    @EnvironmentObject var appState: AppState
     @State private var email = ""
     @State private var password = ""
     @State private var showSuccess = false
     @State private var errorMessage: String?
-    @State private var navigateToHome = false
+    @State private var isPasswordVisible = false
 
     var body: some View {
         NavigationStack {
-            ZStack {
-                BackgroundView()
+            if appState.isLoggedIn{
+                HomeView()
+            } else{
+                ZStack {
+                    BackgroundView()
+                    VStack(spacing: 20) {
+                        Text("Create Account")
+                            .font(.largeTitle)
+                            .bold()
+                            .foregroundColor(.black)
 
-                VStack(spacing: 20) {
-                    Text("Create Account")
-                        .font(.largeTitle)
-                        .bold()
-                        .foregroundColor(.black)
+                        TextField("Email", text: $email)
+                            .keyboardType(.emailAddress)
+                            .autocapitalization(.none)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .padding(.horizontal)
 
-                    TextField("Email", text: $email)
-                        .keyboardType(.emailAddress)
-                        .autocapitalization(.none)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        ZStack{
+                            if !isPasswordVisible{
+                                SecureField("password", text: $password)
+                                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                                    .padding(.horizontal)
+                            } else {
+                                TextField("password", text: $password)
+                                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                                    .padding(.horizontal)
+                            }
+                            HStack{
+                                Spacer()
+                                Button(action: {
+                                    isPasswordVisible.toggle()
+                                }) {
+                                    Image(systemName: isPasswordVisible ? "eye.fill" : "eye.slash.fill")
+                                        .padding(.horizontal, 6)
+                                        .padding(.vertical, 5.5)
+                                        .foregroundStyle(Color.gray)
+                                }
+                                .background(Color.white)
+                                .padding(.horizontal, 18)
+                            }
+                        }
+
+                        Button("Create Account") {
+                            if isValidInput() {
+                                signUpUser()
+                            } else {
+                                errorMessage = "Use a valid @example.com email and password of at least 5 characters"
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.green)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
                         .padding(.horizontal)
 
-                    SecureField("Password", text: $password)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .padding(.horizontal)
-
-                    Button("Create Account") {
-                        if isValidInput() {
-                            signUpUser()
-                        } else {
-                            errorMessage = "Use a valid @example.com email and password of at least 5 characters"
+                        if let error = errorMessage {
+                            Text(error)
+                                .foregroundColor(.red)
+                                .font(.footnote)
                         }
                     }
-                    .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color.green)
-                    .foregroundColor(.white)
-                    .cornerRadius(8)
-                    .padding(.horizontal)
-
-                    if let error = errorMessage {
-                        Text(error)
-                            .foregroundColor(.red)
-                            .font(.footnote)
-                    }
-
-                    NavigationLink(destination: HomeView(), isActive: $navigateToHome) {
-                        EmptyView()
-                    }
+                    .background(Color.white.opacity(0.8))
+                    .cornerRadius(10)
+                    .padding(.horizontal, 30)
                 }
-                .padding()
-                .background(Color.white.opacity(0.8))
-                .cornerRadius(10)
-                .padding(.horizontal, 30)
             }
         }
     }
@@ -103,7 +124,9 @@ struct SignUpView: View {
 
             DispatchQueue.main.async {
                 if httpResponse.statusCode == 201 {
-                    navigateToHome = true
+                    appState.isLoggedIn = true
+                    appState.userEmail = email
+                    appState.userPassword = password
                 } else {
                     errorMessage = "Account already exists or server error."
                 }

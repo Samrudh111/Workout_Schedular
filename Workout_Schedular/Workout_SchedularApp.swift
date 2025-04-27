@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct Workout_SchedularApp: App {
+    @StateObject var appState = AppState()
     var body: some Scene {
         WindowGroup {
             SplashScreenView()
+                .environmentObject(appState)
         }
     }
 }
