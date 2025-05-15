@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftKeychainWrapper
 
 struct LoginView: View{
     @EnvironmentObject var appState: AppState
@@ -107,6 +108,10 @@ struct LoginView: View{
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = try? JSONEncoder().encode(body)
 
+        if let token = KeychainWrapper.standard.string(forKey: "authToken") {
+                request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+            }
+        
         URLSession.shared.dataTask(with: request) { data, response, _ in
             DispatchQueue.main.async {
                 if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {

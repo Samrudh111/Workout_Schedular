@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftKeychainWrapper
 
 struct NewPlanSchedularView: View {
     @State private var height: String = ""
@@ -141,6 +142,10 @@ struct NewPlanSchedularView: View {
         let body: [String: Any] = ["bmi": bmiValue, "goal": selectedGoal]
         request.httpBody = try? JSONSerialization.data(withJSONObject: body)
 
+        if let token = KeychainWrapper.standard.string(forKey: "authToken") {
+                request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+        
         URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data else {
                 print("No data / error: \(error?.localizedDescription ?? "unknown error")")
