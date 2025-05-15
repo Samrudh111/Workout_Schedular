@@ -5,12 +5,19 @@ import openai
 from openai import OpenAI
 import os
 from dotenv import load_dotenv
+from flask_jwt_extended import JWTManager
+from flask_jwt_extended import create_access_token
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 if os.getenv("RENDER") is None:
     load_dotenv()
     
 app = Flask(__name__)
 CORS(app)  # Allows calls from your SwiftUI frontend
+
+# Add this after initializing app
+app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY") or "super-secret"
+jwt = JWTManager(app)
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
@@ -91,9 +98,17 @@ def login():
 
     user = User.query.filter_by(email=email).first()
     if user and user.check_password(password):
-        return jsonify({"message": "Login successful"}), 200
+        access_token = create_access_token(identity=email)
+        return jsonify(access_token=access_token), 200
     else:
         return jsonify({"error": "Invalid credentials"}), 401
+
+@app.route("/profile", methods=["GET"])
+@jwt_required()
+def protected():
+    current_user = get_jwt_identity()
+    return jsonify(logged_in_as=current_user), 200
+
 
 if __name__ == "__main__":
     with app.app_context():
