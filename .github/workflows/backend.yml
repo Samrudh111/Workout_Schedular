@@ -24,6 +24,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
+    - name: Set test DB URI
+      run: echo "SQLALCHEMY_DATABASE_URI=sqlite:///:memory:" >> $GITHUB_ENV
+
     - name: Set environment variables
       run: echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> $GITHUB_ENV
            echo "SQLALCHEMY_DATABASE_URI=sqlite:///:memory:" >> $GITHUB_ENV
