@@ -53,9 +53,6 @@ def test_generate_plan(client):
         "bmi": 22.5,
         "goal": "lean muscular"
     }, headers=headers)
-    print("Response JSON:", response.get_json())
-    print("Status Code:", response.status_code)
-
 
     assert response.status_code == 200
     assert isinstance(response.get_json(), list)
