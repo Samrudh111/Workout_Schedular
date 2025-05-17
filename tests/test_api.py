@@ -41,7 +41,6 @@ def test_login(client):
     assert response.status_code == 200
     assert b"access_token" in response.data
 
-@pytest.mark.skip(reason="Needs OPENAI_API_KEY or mock")
 def test_generate_plan(client):
     # Sign up + login to get JWT token
     client.post("/signup", json={"email": "testuser@example.com", "password": "securepass"})
