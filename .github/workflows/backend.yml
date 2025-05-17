@@ -32,9 +32,6 @@ jobs:
         echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> $GITHUB_ENV
         echo "SQLALCHEMY_DATABASE_URI=sqlite:///:memory:" >> $GITHUB_ENV
 
-    - name: Debug environment
-      run: printenv | grep -E 'OPENAI|SQLALCHEMY'
-
     - name: Run tests
       run: |
         pytest tests/  # 👈 make sure you have a tests/ folder with unit tests
