@@ -28,8 +28,12 @@ jobs:
       run: echo "SQLALCHEMY_DATABASE_URI=sqlite:///:memory:" >> $GITHUB_ENV
 
     - name: Set environment variables
-      run: echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> $GITHUB_ENV
-           echo "SQLALCHEMY_DATABASE_URI=sqlite:///:memory:" >> $GITHUB_ENV
+      run: |
+        echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> $GITHUB_ENV
+        echo "SQLALCHEMY_DATABASE_URI=sqlite:///:memory:" >> $GITHUB_ENV
+
+    - name: Debug environment
+      run: printenv | grep -E 'OPENAI|SQLALCHEMY'
 
     - name: Run tests
       run: |
