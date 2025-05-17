@@ -24,7 +24,9 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 # Configure DB
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://workout_schedular_db_user:8QcxamQr9BvuLF7Vo0djxbflKNV4O5wL@dpg-cvu70qvgi27c73af1l10-a/workout_schedular_db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
+app.config['SQLALCHEMY_DATABASE_URI'] = (
+    os.getenv("DATABASE_URL") or os.getenv("SQLALCHEMY_DATABASE_URI")
+)
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
     "connect_args": {"sslmode": "require"}
 }
