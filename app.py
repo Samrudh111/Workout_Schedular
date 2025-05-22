@@ -48,9 +48,10 @@ def generate_plan():
     bmi = data.get("bmi")
     goal = data.get("goal")
     gender = data.get("gender")
-    
+    level = data.get("level", "Level 1 (Beginner)")
+
     prompt = f"""
-    Create a 7-day personalized gym workout plan for a {gender} user with a BMI of {bmi}, aiming for a {goal} physique.
+    Create a 7-day personalized gym workout plan for a {gender} user with a BMI of {bmi}, aiming for a {goal} physique at {level}
     Output in JSON format like:
     [
       {{"day": "Monday", "workout": "Chest + 20 min cardio"}},
