@@ -117,6 +117,30 @@ def protected():
     current_user = get_jwt_identity()
     return jsonify(logged_in_as=current_user), 200
 
+@app.route("/user/plan", methods=["GET", "POST", "DELETE"])
+@jwt_required()
+def user_plan():
+    user_id = get_jwt_identity()
+
+    if request.method == "GET":
+        plans = WorkoutPlan.query.filter_by(user_id=user_id).all()
+        return jsonify([
+            {"day": plan.day, "workout": plan.workout} for plan in plans
+        ])
+
+    if request.method == "POST":
+        db.session.query(WorkoutPlan).filter_by(user_id=user_id).delete()
+        plans = request.json  # expects list of {day, workout}
+        for entry in plans:
+            db.session.add(WorkoutPlan(user_id=user_id, day=entry["day"], workout=entry["workout"]))
+        db.session.commit()
+        return jsonify({"message": "Workout plan saved"}), 201
+
+    if request.method == "DELETE":
+        db.session.query(WorkoutPlan).filter_by(user_id=user_id).delete()
+        db.session.commit()
+        return jsonify({"message": "Workout plan cleared"}), 200
+
 
 if __name__ == "__main__":
     with app.app_context():
