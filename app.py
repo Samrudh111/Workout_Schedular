@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from models import db, User
+from models import db, User, WorkoutPlan
 import openai
 from openai import OpenAI
 import os
