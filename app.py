@@ -133,7 +133,7 @@ def user_plan():
         db.session.query(WorkoutPlan).filter_by(user_id=user_id).delete()
         plans = request.json  # expects list of {day, workout}
         for entry in plans:
-            db.session.add(WorkoutPlan(user_id=user_id, day=entry.get["day"], workout=entry.get["workout"]))
+            db.session.add(WorkoutPlan(user_id=user_id, day=entry.get("day"), workout=entry.get("workout")))
         db.session.commit()
         return jsonify({"message": "Workout plan saved"}), 201
 
