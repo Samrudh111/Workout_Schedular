@@ -107,14 +107,14 @@ struct LoginView: View{
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = try? JSONEncoder().encode(body)
-
-        if let token = KeychainWrapper.standard.string(forKey: "authToken") {
-                request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-            }
         
         URLSession.shared.dataTask(with: request) { data, response, _ in
             DispatchQueue.main.async {
-                if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
+                if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200,
+                   let data = data,
+                   let result = try? JSONDecoder().decode([String: String].self, from: data),
+                   let token = result["access_token"] {
+                    KeychainWrapper.standard.set(token, forKey: "authToken")
                     appState.isLoggedIn = true
                     appState.userEmail = email
                     appState.userPassword = password
