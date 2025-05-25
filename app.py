@@ -124,6 +124,7 @@ def user_plan():
 
     if request.method == "GET":
         plans = WorkoutPlan.query.filter_by(user_id=user_id).all()
+        print(f"Fetched plans for user {user_id}: {plans}")
         return jsonify([
             {"day": plan.day, "workout": plan.workout} for plan in plans
         ])
