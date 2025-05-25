@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from models import db, User
+from models import db, User, WorkoutPlan
 import openai
 from openai import OpenAI
 import os
@@ -24,10 +24,16 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 # Configure DB
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://workout_schedular_db_user:8QcxamQr9BvuLF7Vo0djxbflKNV4O5wL@dpg-cvu70qvgi27c73af1l10-a/workout_schedular_db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
-app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
-    "connect_args": {"sslmode": "require"}
-}
+db_uri = (
+    os.getenv("DATABASE_URL") or os.getenv("SQLALCHEMY_DATABASE_URI")
+)
+app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
+
+# Apply sslmode only for PostgreSQL
+if db_uri and db_uri.startswith("postgresql"):
+    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+        "connect_args": {"sslmode": "require"}
+    }
 
 db.init_app(app)
 
@@ -41,9 +47,11 @@ def generate_plan():
     data = request.json
     bmi = data.get("bmi")
     goal = data.get("goal")
+    gender = data.get("gender")
+    level = data.get("level", "Level 1 (Beginner)")
 
     prompt = f"""
-    Create a 7-day personalized gym workout plan for someone with a BMI of {bmi}, aiming for a {goal} physique.
+    Create a 7-day personalized gym workout plan for a {gender} user with a BMI of {bmi}, aiming for a {goal} physique at {level}
     Output in JSON format like:
     [
       {{"day": "Monday", "workout": "Chest + 20 min cardio"}},
@@ -108,6 +116,31 @@ def login():
 def protected():
     current_user = get_jwt_identity()
     return jsonify(logged_in_as=current_user), 200
+
+@app.route("/user/plan", methods=["GET", "POST", "DELETE"])
+@jwt_required()
+def user_plan():
+    user_id = get_jwt_identity()
+
+    if request.method == "GET":
+        plans = WorkoutPlan.query.filter_by(user_id=user_id).all()
+        print(f"Fetched plans for user {user_id}: {plans}")
+        return jsonify([
+            {"day": plan.day, "workout": plan.workout} for plan in plans
+        ])
+
+    if request.method == "POST":
+        db.session.query(WorkoutPlan).filter_by(user_id=user_id).delete()
+        plans = request.json  # expects list of {day, workout}
+        for entry in plans:
+            db.session.add(WorkoutPlan(user_id=user_id, day=entry.get["day"], workout=entry.get["workout"]))
+        db.session.commit()
+        return jsonify({"message": "Workout plan saved"}), 201
+
+    if request.method == "DELETE":
+        db.session.query(WorkoutPlan).filter_by(user_id=user_id).delete()
+        db.session.commit()
+        return jsonify({"message": "Workout plan cleared"}), 200
 
 
 if __name__ == "__main__":
