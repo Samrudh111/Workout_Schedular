@@ -26,15 +26,32 @@ struct HomeView: View{
                         .shadow(radius: 5)
                     
                     if !savedPlan.isEmpty {
-                        Text("Here’s your current plan:")
-                            .font(.subheadline)
-                        ForEach(savedPlan) { day in
-                            VStack(alignment: .leading) {
-                                Text(day.day).bold()
-                                Text(day.workout)
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("Your Weekly Workout Plan:")
+                                .font(.title2)
+                                .bold()
+                                .padding(.bottom, 10)
+
+                            ForEach(savedPlan) { day in
+                                HStack {
+                                    Text(day.day)
+                                        .fontWeight(.semibold)
+                                        .frame(width: 100, alignment: .leading)
+
+                                    Text(day.workout)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                }
+                                .padding()
+                                .background(isToday(day.day) ? Color.blue.opacity(0.15) : Color.white.opacity(0.6))
+                                .cornerRadius(10)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(isToday(day.day) ? Color.blue : Color.gray.opacity(0.3), lineWidth: 1)
+                                )
                             }
                         }
                         .padding(.horizontal)
+
                     }
                     
                     Button(action: {
@@ -63,9 +80,12 @@ struct HomeView: View{
             }
         }
         .navigationBarBackButtonHidden(true)
-        .onAppear(){
-            savedPlan = WorkoutStorageManager.loadPlan()
+        .onAppear {
+            fetchSavedPlanFromServer { fetched in
+                self.savedPlan = fetched
+            }
         }
+
         .onChange(of: navigateToSchedularView) { isNavigating in
             if !isNavigating{
                 fetchSavedPlanFromServer { fetched in
@@ -102,6 +122,13 @@ struct HomeView: View{
                 print("❌ No data or network error:", error?.localizedDescription ?? "unknown error")
             }
         }.resume()
+    }
+    
+    func isToday(_ dayName: String) -> Bool {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEEE"
+        let today = formatter.string(from: Date())
+        return dayName.caseInsensitiveCompare(today) == .orderedSame
     }
 
 }
