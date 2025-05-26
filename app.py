@@ -120,25 +120,27 @@ def protected():
 @app.route("/user/plan", methods=["GET", "POST", "DELETE"])
 @jwt_required()
 def user_plan():
-    user_id = get_jwt_identity()
-
+    user_email = get_jwt_identity()
+    user = User.query.filter_by(email=user_email).first()
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+    
     if request.method == "GET":
-        plans = WorkoutPlan.query.filter_by(user_id=user_id).all()
-        print(f"Fetched plans for user {user_id}: {plans}")
+        plans = WorkoutPlan.query.filter_by(user_id=user.id).all()
         return jsonify([
             {"day": plan.day, "workout": plan.workout} for plan in plans
         ])
 
     if request.method == "POST":
-        db.session.query(WorkoutPlan).filter_by(user_id=user_id).delete()
+        db.session.query(WorkoutPlan).filter_by(user_id=user.id).delete()
         plans = request.json  # expects list of {day, workout}
         for entry in plans:
-            db.session.add(WorkoutPlan(user_id=user_id, day=entry.get["day"], workout=entry.get["workout"]))
+            db.session.add(WorkoutPlan(user_id=user.id, day=entry.get("day"), workout=entry.get("workout")))
         db.session.commit()
         return jsonify({"message": "Workout plan saved"}), 201
 
     if request.method == "DELETE":
-        db.session.query(WorkoutPlan).filter_by(user_id=user_id).delete()
+        db.session.query(WorkoutPlan).filter_by(user_id=user.id).delete()
         db.session.commit()
         return jsonify({"message": "Workout plan cleared"}), 200
 
