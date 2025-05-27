@@ -15,15 +15,24 @@ struct HomeView: View{
     var body: some View{
         NavigationStack{
             ZStack{
-                Color.yellow
-                    .opacity(0.7)
+                Color.green
                     .ignoresSafeArea()
+                GeometryReader { geometry in
+                        Image(systemName: "dumbbell.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: geometry.size.width * 1.5) // Large size
+                            .foregroundColor(.gray.opacity(0.2))
+                            .rotationEffect(.degrees(-35))
+                            .position(x: geometry.size.width / 2, y: 350)
+                }
                 VStack{
-                    Text("Hey there! Welcome to Workout Schedular")
-                        .foregroundStyle(.red)
+                    Spacer()
+                    Text("Welcome to Workout Schedular !")
+                        .foregroundStyle(Color.yellow)
                         .font(.headline)
                         .fontWeight(.heavy)
-                        .shadow(radius: 5)
+                        .shadow(radius: 6)
                     
                     if !savedPlan.isEmpty {
                         VStack(alignment: .leading, spacing: 12) {
@@ -71,8 +80,11 @@ struct HomeView: View{
                     Button("Logout"){
                         appState.isLoggedIn = false
                         appState.userPassword = ""
-                        //WorkoutStorageManager.clearPlan()
                     }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.red)
+                    .foregroundStyle(Color.white)
                     NavigationLink(destination: NewPlanSchedularView(), isActive: $navigateToSchedularView){
                         EmptyView()
                     }
@@ -107,9 +119,6 @@ struct HomeView: View{
 
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let data = data {
-                if let raw = String(data: data, encoding: .utf8) {
-                    print("RAW PLAN JSON:", raw)
-                }
                 do {
                     let decoded = try JSONDecoder().decode([WorkoutDay].self, from: data)
                     DispatchQueue.main.async {
@@ -130,7 +139,6 @@ struct HomeView: View{
         let today = formatter.string(from: Date())
         return dayName.caseInsensitiveCompare(today) == .orderedSame
     }
-
 }
 
 #Preview{
