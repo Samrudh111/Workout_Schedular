@@ -58,9 +58,9 @@ An AI-driven iOS fitness app built with SwiftUI and Flask backend that generates
 |-----------------------------|-----------------------------|
 | ![bmi-form](Assets/LoginPage.png) | ![home-view](Assets/SignUpPage.png) |
 
-| BMI Calculator & Plan Generator | Home Screen with Workout Plan |
+| Get info from the user | Provide the user with a Perfect Workout plan  |
 |-----------------------------|-----------------------------|
-| ![bmi-form](screenshots/bmi_form.png) | ![home-view](screenshots/home_view.png) |
+| ![bmi-form](Assets/newPlan_getInfo.png) | ![home-view](Assets/newPlan_got.png) |
 
 > *(Replace with actual screenshot filenames or Loom demo)*
 
