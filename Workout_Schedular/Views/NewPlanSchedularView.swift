@@ -30,7 +30,7 @@ struct NewPlanSchedularView: View {
 
     var heightPicker: some View {
         VStack(alignment: .leading) {
-            Text("Height:")
+            Text("Height (cm):")
             Menu {
                 ForEach(heightOptions, id: \.self) { value in
                     Button(value) { height = value }
@@ -49,7 +49,7 @@ struct NewPlanSchedularView: View {
 
     var weightPicker: some View {
         VStack(alignment: .leading) {
-            Text("Weight:")
+            Text("Weight (kg):")
             Menu {
                 ForEach(weightOptions, id: \.self) { value in
                     Button(value) { weight = value }

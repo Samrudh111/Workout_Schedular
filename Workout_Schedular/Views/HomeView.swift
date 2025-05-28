@@ -51,7 +51,7 @@ struct HomeView: View{
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                 }
                                 .padding()
-                                .background(isToday(day.day) ? Color.blue.opacity(0.15) : Color.white.opacity(0.6))
+                                .background(isToday(day.day) ? Color.blue.opacity(0.3) : Color.white.opacity(0.6))
                                 .cornerRadius(10)
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 10)
