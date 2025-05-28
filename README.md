@@ -56,7 +56,8 @@ An AI-driven iOS fitness app built with SwiftUI and Flask backend that generates
 
 | Login Page | SignUp Page |
 |-----------------------------|-----------------------------|
-| ![bmi-form](Assets/LoginPage.png) | ![home-view](Assets/SignUpPage.png) |
+| <img src="Assets/LoginPage.png" alt="App Screenshot" width="400" height="300"/>
+ | ![home-view](Assets/SignUpPage.png) |
 
 | Home View |
 |-----------------------------|
