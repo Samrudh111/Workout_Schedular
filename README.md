@@ -56,7 +56,7 @@ An AI-driven iOS fitness app built with SwiftUI and Flask backend that generates
 
 | Login Page | SignUp Page |
 |-----------------------------|-----------------------------|
-| ![bmi-form](assets/LoginPage.png) | ![home-view](SignUpPage.png) |
+| ![bmi-form](Assets/LoginPage.png) | ![home-view](Assets/SignUpPage.png) |
 
 | BMI Calculator & Plan Generator | Home Screen with Workout Plan |
 |-----------------------------|-----------------------------|
