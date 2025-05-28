@@ -1,4 +1,4 @@
-# 🏋️‍♂️ Workout Scheduler – AI-Powered Fitness Planner App
+# Workout Scheduler – AI-Powered Fitness Planner App
 
 An AI-driven iOS fitness app built with SwiftUI and Flask backend that generates personalized workout plans based on user goals, BMI, gender, and fitness level.
 
