@@ -31,13 +31,13 @@ An AI-driven iOS fitness app built with SwiftUI and Flask backend that generates
 
 ## Technologies Used
 
-### - **Frontend (iOS App)
+### * Frontend (iOS App)
 - SwiftUI
 - KeychainWrapper
 - URLSession
 - Dynamic form elements (Menu, SegmentedPicker, ScrollView)
 
-### - **Backend (API Server)
+### * Backend (API Server)
 - Flask
 - SQLAlchemy
 - PostgreSQL (Render)
@@ -45,7 +45,7 @@ An AI-driven iOS fitness app built with SwiftUI and Flask backend that generates
 - Flask-JWT-Extended
 - Flask-CORS
 
-### - **DevOps
+### * DevOps
 - GitHub Actions (CI/CD)
 - Pytest
 - Render Cloud Hosting
