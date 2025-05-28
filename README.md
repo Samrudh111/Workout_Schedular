@@ -61,7 +61,8 @@ An AI-driven iOS fitness app built with SwiftUI and Flask backend that generates
 
 | Home View |
 |-----------------------------|
-| ![bmi-form](Assets/HomePage.png) |
+| ![bmi-form](<img src="Assets/HomePage.png" alt="App Screenshot" width="400" height="300"/>
+) |
 
 | Get info from the user | Provide the user with a Perfect Workout plan  |
 |-----------------------------|-----------------------------|
