@@ -68,7 +68,7 @@ An AI-driven iOS fitness app built with SwiftUI and Flask backend that generates
 
 ---
 
-## 🚦 Getting Started
+## Getting Started
 
 1. Clone this repo
 2. `cd backend/ && pip install -r requirements.txt`
@@ -77,26 +77,16 @@ An AI-driven iOS fitness app built with SwiftUI and Flask backend that generates
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License – see the [LICENSE](LICENSE) file for details.
 
 ---
 
-## 🙌 Author
+## Author
 
-**Samrudh S**  
-Passionate iOS + AI Developer | Open to full-time iOS & AI-based roles  
-[LinkedIn](https://linkedin.com/in/your-profile) *(replace with yours)*
+**Samrudh Surendra**  
+Passionate iOS Developer  
+[LinkedIn](https://www.linkedin.com/in/samrudh-surendra1)
 
 ---
-
-## 💡 Tips for Recruiters
-
-Looking for someone who can:
-- Design intelligent user interfaces
-- Build scalable API services
-- Deploy full-stack apps with CI/CD pipelines
-- Blend AI into daily product experiences
-
-Let’s connect!
