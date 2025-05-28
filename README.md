@@ -87,6 +87,4 @@ This project is licensed under the MIT License – see the [LICENSE](LICENSE) fi
 
 **Samrudh Surendra**  
 Passionate iOS Developer  
-email: samrudhsurendra555@gmail.com
-
-[LinkedIn](https://www.linkedin.com/in/samrudh-surendra1)
+email: samrudhsurendra555@gmail.com  |  [LinkedIn](https://www.linkedin.com/in/samrudh-surendra1)
