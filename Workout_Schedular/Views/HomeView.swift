@@ -12,6 +12,8 @@ struct HomeView: View{
     @EnvironmentObject var appState: AppState
     @State private var navigateToSchedularView: Bool = false
     @State private var savedPlan: [WorkoutDay] = []
+    @State private var showActivityMonitor: Bool = false
+    
     var body: some View{
         NavigationStack{
             ZStack{
@@ -27,12 +29,12 @@ struct HomeView: View{
                             .position(x: geometry.size.width / 2, y: 350)
                 }
                 VStack{
-                    Spacer()
                     Text("Welcome to Workout Schedular !")
                         .foregroundStyle(Color.yellow)
-                        .font(.headline)
-                        .fontWeight(.heavy)
+                        .font(.title)
                         .shadow(radius: 6)
+                        .offset(y: 80)
+                        .padding(.vertical, 50)
                     
                     if !savedPlan.isEmpty {
                         VStack(alignment: .leading, spacing: 12) {
@@ -61,7 +63,28 @@ struct HomeView: View{
                         }
                         .padding(.horizontal)
 
+                        
+//                        VStack {
+//                            DailyCheckInView(
+//                                completedYesterday: $completedYesterday,
+//                                sleepHours: $sleepHours,
+//                                fatigueLevel: $fatigueLevel,
+//                                sorenessLevel: $sorenessLevel
+//                            )
+//
+//                            RecoveryBanner(recommendation: rec)
+//
+//                            // Your existing "Today's Workout" list
+//                            TodayWorkoutListView(recommendation: rec)
+//                        }
                     }
+                    
+                    Button {
+                        showActivityMonitor = true
+                    } label: {
+                        Text("Show Activity Monitor")
+                    }
+
                     
                     Button(action: {
                         navigateToSchedularView = true
@@ -97,13 +120,15 @@ struct HomeView: View{
                 self.savedPlan = fetched
             }
         }
-
         .onChange(of: navigateToSchedularView) { isNavigating in
             if !isNavigating{
                 fetchSavedPlanFromServer { fetched in
                     self.savedPlan = fetched
                 }
             }
+        }
+        .sheet(isPresented: $showActivityMonitor) {
+            ActivitySummaryView(showActivityMonitor: $showActivityMonitor)
         }
     }
     
